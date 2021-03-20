@@ -1,16 +1,4 @@
-import cors from 'cors'
-import express from 'express'
 import { connect, NatsConnection, StringCodec } from 'nats';
-// import { getAllMessages } from './utils/displaydata'
-import { executeInsertMessage } from './utils/transactions'
-import { wait } from './utils/time'
-
-//instantiate express app ??
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-//===================
 
 //connect to NATS
 const servers = 
@@ -45,19 +33,31 @@ const sc = StringCodec();
 
     console.log(`connected to ${nc.getServer()}`);
 
-    await wait(5 * 1000);
+    //Setting subscriptions
+    const sub = nc.subscribe("service1.messages", {
+        timeout: 20000
+    });
+    try{
+        for await(const m of sub) {
+            let msg = sc.decode(m.data);
 
-    console.log("sending..");
-    
-    for(let i = 0; i < 5; i++){
-        nc.publish("service1.messages", sc.encode("test 5 sec" + i));
-        await wait(15 * 1000);
+            if(msg === 'close') break;
+            
+            console.log(`[${sub.getProcessed()}]: ${msg}  - id : ${sub.getID()}`);
+            // executeInsertMessage(msg);
+        }
+    }catch(err){
+        console.error(`Exception caught: ${err.message}`);
     }
+    console.log("subscription closed");
+    
+    await nc.drain().catch(err => console.log(err));
 
-    nc.publish("service1.messages", sc.encode("close"));
-
-    await nc.flush();
-    await nc.drain();
+    const e = await nc.closed();
+    if(e){
+        console.log(`Error closing connection: ${e}`);    
+    }
+    return;
     
 })(servers[1]);
  

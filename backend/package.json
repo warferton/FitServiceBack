@@ -5,8 +5,9 @@
   "main": "cd baindex.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node app.ts",
+    "start": "ts-node index.ts",
     "dev": "nodemon",
+    "sub": "ts-node nats-sub.ts",
     "build": "rm -rf ./build && npx tsc",
     "prod": "npm run build && node -r tsconfig-paths/register build/index.js"
   },
