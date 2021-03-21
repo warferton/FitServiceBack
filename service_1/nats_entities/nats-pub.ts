@@ -1,6 +1,6 @@
 import { connect, NatsConnection, StringCodec } from 'nats';
-import { randomWord } from 'utils/random';
-import { wait } from 'utils/time'
+import { randomWord } from '../utils/random';
+import { wait } from '../utils/time'
 
 //connect to NATS
 const server = 
@@ -20,34 +20,35 @@ const publish_subject = "messages.service.2";
 //init codec
 const sc = StringCodec();
 
-const startPublisher =
+//execute
+(async () => {
+    let nc : NatsConnection;
+    try {
+        nc = await connect(server);
+    } catch (err) {
+        console.log(`error connecting to ${JSON.stringify(server)} \n ${err}`);
+        return;
+    };
+    console.log(`connected to ${nc.getServer()}`);
 
-    (async () => {
-        let nc : NatsConnection;
-        try {
-            nc = await connect(server);
-        } catch (err) {
-            console.log(`error connecting to ${JSON.stringify(server)} \n ${err}`);
-            return;
-        };
+    await wait(5 * 1000);
 
-        console.log(`connected to ${nc.getServer()}`);
-
+    console.log("sending..");
+    
+    for(let i = 0; i < 15; i++){
+        let msg = randomWord() + " " + randomWord();
+        nc.publish(publish_subject, sc.encode(msg));
+        console.log("sent...");
         await wait(5 * 1000);
-
-        console.log("sending..");
-        
-        for(let i = 0; i < 15; i++){
-            let msg = randomWord() + ' ' + randomWord();
-            nc.publish(publish_subject, sc.encode(msg));
-            console.log("sent...");
-            await wait(15 * 1000);
-        }
-
-        nc.publish(publish_subject, sc.encode("close"));
-
+    }
+    nc.publish(publish_subject, sc.encode("close"));
+    
+   try{
         await nc.flush();
         await nc.drain();
-        nc.close();
-        
-    })();
+        await nc.close();   
+    }catch(err){
+        console.log(`Error caught: ${err.message}`);
+    }
+    
+})();

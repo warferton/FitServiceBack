@@ -1,0 +1,49 @@
+version: "3.7"
+services:
+  
+  db_1:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres_1
+      POSTGRES_DB: messages
+    volumes:
+      - ./pgdata:/var/lib/postgresl/data
+    ports: 
+      - "5431:5432"
+      
+  db_2:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres_2
+      POSTGRES_DB: messages
+    volumes:
+      - ./pgdata:/var/lib/postgres/data
+    ports: 
+      - "5432:5432"
+
+  nats_server:
+    image: nats:latest
+    depends_on:
+      - db_1
+      - db_2
+    ports: 
+      - "4222:4222"
+
+  message_node_1:
+    image: message_service_1
+    depends_on:
+      - nats_server
+      - db_1
+    links:
+      - "db_1"
+
+  message_node_2:
+    image: message_service_2
+    depends_on:
+      - nats_server
+      - db_2
+    links:
+      - "db_2"
+     

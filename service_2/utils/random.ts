@@ -1,4 +1,4 @@
-export function randomWord(): string {
+export function randomWord(): string | undefined{
   // random num in range [0 ; 10)
   const rand = Math.floor(Math.random() * 10);
   return words[rand];

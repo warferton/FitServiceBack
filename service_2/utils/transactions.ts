@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { Message } from 'custom_types/message';
+import { Message } from '../custom_types/message';
 
 //instantiate prisma client
 const prisma = new PrismaClient()
