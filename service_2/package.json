@@ -5,14 +5,15 @@
   "main": "cd baindex.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node index.ts",
+    "start": "npm run sub & npm run pub",
     "dev": "nodemon",
-    "sub": "ts-node nats-sub.ts",
+    "pub": "ts-node nats_entities/nats-pub.ts",
+    "sub": "ts-node nats_entities/nats-sub.ts",
     "build": "rm -rf ./build && npx tsc",
     "prod": "npm run build && node -r tsconfig-paths/register build/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "AlexKirillov",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^2.19.0",

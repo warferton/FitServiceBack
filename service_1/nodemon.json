@@ -4,5 +4,5 @@
     ],
     "ext": ".ts,.js",
     "ignore": [],
-    "exec": "ts-node -r tsconfig-paths/register ./index.ts"
+    "exec": "ts-node -r tsconfig-paths/register ./nats_entities/nats-sub.ts & ts-node -r tsconfig-paths/register ./nats_entities/nats-pub.ts"
 }
