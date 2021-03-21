@@ -1,22 +1,26 @@
-import { connect, NatsConnection, StringCodec} from 'nats';
-import { wait } from '../utils/time'
+import { connect, NatsConnection, StringCodec } from 'nats';
+import { randomWord } from 'utils/random';
+import { wait } from 'utils/time'
 
 //connect to NATS
 const server = 
   //local + remote cluster
 { 
     servers: ["localhost:4222", "demo.nats.io:4443"],
-    name: 'union',
+    name: 'service_1_pub',
     noEcho: true,
     noRandomize: true,
     timeout: 10 * 1000,
     maxReconnectAttempts: 5
 };
 
+//subject to publish to
+const publish_subject = "messages.service.2";
+
 //init codec
 const sc = StringCodec();
 
-export const startPublisher =
+const startPublisher =
 
     (async () => {
         let nc : NatsConnection;
@@ -34,12 +38,13 @@ export const startPublisher =
         console.log("sending..");
         
         for(let i = 0; i < 15; i++){
-            nc.publish("messages.service.2", sc.encode("message__to_node_2 t:" + i));
+            let msg = randomWord() + ' ' + randomWord();
+            nc.publish(publish_subject, sc.encode(msg));
             console.log("sent...");
             await wait(15 * 1000);
         }
 
-        nc.publish("messages.service.2", sc.encode("close"));
+        nc.publish(publish_subject, sc.encode("close"));
 
         await nc.flush();
         await nc.drain();

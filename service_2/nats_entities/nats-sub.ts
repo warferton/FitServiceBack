@@ -1,21 +1,26 @@
 import { connect, NatsConnection, StringCodec } from 'nats';
+import { Message } from 'custom_types/message';
+import { executeInsertMessage } from 'utils/transactions';
 
 //connect to NATS
 const server = 
   //local + remote cluster
 { 
     servers: ["localhost:4222", "demo.nats.io:4443"],
-    name: 'union',
+    name: 'service_2_sub',
     noEcho: true,
     timeout: 10 * 1000,
     noRandomize: true,
     maxReconnectAttempts: 5
 };
 
+//subject to subscribe to
+const subscription_subject = "messages.service.2";
+
 //init codec
 const sc = StringCodec();
   
-export const startSubscription =
+const startSubscription =
     (async () => {
         let nc : NatsConnection;
         try {
@@ -28,9 +33,10 @@ export const startSubscription =
         console.log(`connected to ${nc.getServer()}`);
 
         //Setting subscriptions
-        const sub = nc.subscribe("messages.service.2", {
-            timeout: 60 * 1000 // 60sec
+        const sub = nc.subscribe(subscription_subject, {
+            timeout: 60 * 1000 // 60sec timeout
         });
+
         try{
             for await(const m of sub) {
                 let msg = sc.decode(m.data);
@@ -38,7 +44,7 @@ export const startSubscription =
                 if(msg === 'close') break;
                 
                 console.log(`[${sub.getProcessed()}]: ${msg}  - pending: ${sub.getPending()}`);
-                // executeInsertMessage(msg);
+                executeInsertMessage(new Message(msg));
             }
         }catch(err){
             console.error(`Exception caught: ${err.message}`);
@@ -56,4 +62,3 @@ export const startSubscription =
         
     })();
  
-// module.exports = startSubscription;

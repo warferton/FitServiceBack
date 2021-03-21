@@ -1,17 +1,21 @@
-//instantiate prisma client
 import { PrismaClient } from '@prisma/client'
+import { Message } from 'custom_types/message';
+
+//instantiate prisma client
 const prisma = new PrismaClient()
 
-
-export async function executeInsertMessage(message_body : string) {
+export async function executeInsertMessage(message: Message) {
+    const message_body = message.body;
+    const message_time = message.timestamp;
     try{
-        const msgs = await prisma.messages_in.create({
+        await prisma.messages_in.create({
             data:{
                 message_body,
+                message_time
             }
     });
     }catch(err){
-        console.log(`Error has occurred! ${err}`);
+        console.log(`Error has occurred while inserting into table. ${err}`);
     }
     
 }
