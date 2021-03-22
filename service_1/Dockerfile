@@ -24,4 +24,4 @@ WORKDIR /usr/app/build
 
 
 EXPOSE 8002
-CMD prisma migrate dev --name service_1_mig && npm run start
+CMD prisma migrate dev --name service_1_mig && (node nats_entities/nats-sub.js & node nats_entities/nats-pub.js)
