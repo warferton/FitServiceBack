@@ -5,7 +5,7 @@
   "main": "cd baindex.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run sub & npm run pub",
+    "start": "node build/nats_entities/nats-sub.js & build/node nats_entities/nats-pub.js",
     "dev": "nodemon",
     "pub": "ts-node nats_entities/nats-pub.ts",
     "sub": "ts-node nats_entities/nats-sub.ts",
