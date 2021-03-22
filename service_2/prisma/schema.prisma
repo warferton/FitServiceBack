@@ -11,5 +11,5 @@ model messages_in {
   id           Int      @id @default(autoincrement())
   uuid         String   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   message_body String   @default("No Message")
-  message_time DateTime @default(now()) @db.Timestamp(0)
+  message_time DateTime @default(now()) @db.Timestamptz(0)
 }
