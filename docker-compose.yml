@@ -3,10 +3,14 @@ services:
   
   db_1:
     image: postgres:13-alpine
+    container_name: pgdb_1
+    restart: on-failure
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres_1
       POSTGRES_DB: messages
+      TZ: 'Asia/Novosibirsk'
+      PGTZ: 'Asia/Novosibirsk'
     volumes:
       - ./pgdata:/var/lib/postgresl/data
     ports: 
@@ -14,17 +18,23 @@ services:
       
   db_2:
     image: postgres:13-alpine
+    container_name: pgdb_2
+    restart: on-failure
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres_2
       POSTGRES_DB: messages
+      TZ: 'Asia/Novosibirsk'
+      PGTZ: 'Asia/Novosibirsk'
     volumes:
       - ./pgdata:/var/lib/postgres/data
     ports: 
       - "5432:5432"
 
-  nats_server:
+  nats:
     image: nats:latest
+    container_name: nats_server
+    restart: on-failure
     depends_on:
       - db_1
       - db_2
@@ -32,18 +42,24 @@ services:
       - "4222:4222"
 
   message_node_1:
-    image: message_service_1
+    build: ./service_1/
+    container_name: service_1
+    restart: on-failure
     depends_on:
-      - nats_server
+      - nats
       - db_1
     links:
       - "db_1"
+      - "nats"
 
   message_node_2:
-    image: message_service_2
+    build: ./service_2/
+    container_name: service_2
+    restart: on-failure
     depends_on:
-      - nats_server
+      - nats
       - db_2
     links:
       - "db_2"
+      - "nats"
      

@@ -6,7 +6,7 @@ import { executeInsertMessage } from '../utils/transactions';
 const server = 
   //local + remote cluster
 { 
-    servers: ["localhost:4222", "demo.nats.io:4443"],
+    servers: ["nats:4222", "demo.nats.io:4443"],
     name: 'service_1_sub',
     noEcho: true,
     timeout: 10 * 1000,
@@ -42,8 +42,9 @@ const sc = StringCodec();
 
             if(msg === 'close') break;
             
-            console.log(`[${sub.getProcessed()}]: ${msg}  - pending: ${sub.getPending()}`);
             executeInsertMessage(new Message(msg));
+            
+            console.log(`[${sub.getProcessed()}]: ${msg}  - time: ${new Date().toLocaleTimeString()}`);
         }
     }catch(err){
         console.error(`Exception caught: ${err.message}`);

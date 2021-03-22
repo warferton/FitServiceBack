@@ -5,8 +5,7 @@ import { Message } from '../custom_types/message';
 const prisma = new PrismaClient()
 
 export async function executeInsertMessage(message: Message) {
-    const message_body = message.body;
-    const message_time = message.timestamp;
+    const [message_body, message_time] = [message.body, message.time];
     try{
         await prisma.messages_in.create({
             data:{

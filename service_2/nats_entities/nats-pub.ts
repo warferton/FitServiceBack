@@ -6,7 +6,7 @@ import { wait } from '../utils/time'
 const server = 
   //local+remote cluster
 { 
-    servers: ["localhost:4222", "demo.nats.io:4443"],
+    servers: ["nats:4222", "demo.nats.io:4443"],
     name: 'service_2_pub',
     noEcho: true,
     noRandomize: true,

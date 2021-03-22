@@ -1,5 +1,6 @@
 FROM node:14
 
+
 # Create app directory
 WORKDIR /usr/app/
 
@@ -13,7 +14,6 @@ COPY . .
 #Configure Prisma Client
 RUN npm install -g prisma
 RUN prisma generate
-
 
 RUN npm run build
 
