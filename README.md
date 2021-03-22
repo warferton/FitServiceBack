@@ -23,11 +23,15 @@ __Service Two DB__:
 - `TIME_ZONE:` "Asia/Novosibirsk"
 
 ### Docker Images Used
-|PostgreSQL | [postgres:13-alpine](https://hub.docker.com/_/postgres/)|
+|PostgreSQL | NATS |
 |-----------|---------|
-|NATS | [nats:latest](https://hub.docker.com/_/nats)|
+|[postgres:13-alpine](https://hub.docker.com/_/postgres/)| [nats:latest](https://hub.docker.com/_/nats)|
 
+## Run
 
+```
+> docker-compose up --build -d
+```
 
 
 ## RU
