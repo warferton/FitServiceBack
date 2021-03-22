@@ -2,7 +2,7 @@ import { connect, NatsConnection, StringCodec } from 'nats';
 import { randomWord } from '../utils/random';
 import { wait } from '../utils/time'
 
-//connect to NATS
+//NATS connection config
 const server = 
   //local + remote cluster
 { 
@@ -34,12 +34,13 @@ const sc = StringCodec();
     await wait(5 * 1000);
 
     console.log("sending..");
-    
-    for(let i = 0; i < 15; i++){
+
+    //remove condition agruments to have infinite loop
+    for(let i = 0; i < 10; i++){
         let msg = randomWord() + " " + randomWord();
         nc.publish(publish_subject, sc.encode(msg));
         console.log("sent...");
-        await wait(5 * 1000);
+        await wait(60 * 1000); // 1 msg/min
     }
     nc.publish(publish_subject, sc.encode("close"));
     

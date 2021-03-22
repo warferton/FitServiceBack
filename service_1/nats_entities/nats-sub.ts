@@ -2,7 +2,7 @@ import { Message } from '../custom_types/message';
 import { connect, NatsConnection, StringCodec } from 'nats';
 import { executeInsertMessage } from '../utils/transactions';
 
-//connect to NATS
+//NATS connection config
 const server = 
   //local + remote cluster
 { 
