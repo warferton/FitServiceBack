@@ -3,7 +3,7 @@
 ## EN
 
 ### About
-Two services communicating through NATS server. Each service has __Publisher__ and __Subscriber__　modules (nats-pub & nats-sub respectively).  Upon bringing up the container cluster the services would publish random string messages of two words for 10 minutes, 1 _msg_/_min_, each recieved message is stored in a serivce's database. After 10 minutes each publisher will send a 'close' message to subject that the opposite service is subscribed to (`messages.service.1` for __service_1__, and `messages.service.2` for __service_2__) and finish working.  Upon recieveing the 'close' message both subscriers also stop working.
+Two services communicating through NATS server. Each service has __Publisher__ and __Subscriber__　modules (nats-pub & nats-sub respectively).  Upon bringing up the container cluster the services would publish random string messages of two words for 10 minutes, 1 _msg_/_min_, each received message is stored in a service's database. After 10 minutes each publisher will send a 'close' message to subject that the opposite service is subscribed to (`messages.service.1` for __service_1__, and `messages.service.2` for __service_2__) and finish working.  Upon recieveing the 'close' message both subscriers also stop working.
 
 ### Tech Used
  - [NodeJs](https://nodejs.org/en/)
